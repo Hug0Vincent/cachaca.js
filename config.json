@@ -1,0 +1,7 @@
+{
+    "dumperExfilUrl":"https://127.0.0.1/",
+    "poisonerFetchMode":"url",
+    "poisonerFetchModeValue":"http://127.0.0.1/custom_cache.zstd",
+    "poisonerCacheKey": "npm-cachaca",
+    "poisonerCacheVersion": "801c2033d34f5527515cf4db177503fe272d4179b9f27199bff1b2af3a149cfb"
+}

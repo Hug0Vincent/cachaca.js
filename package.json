@@ -1,0 +1,32 @@
+{
+  "name": "cachaca.js",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/cachaca-cli.js",
+  "bin": {
+    "cachaca.js": "./dist/cachaca-cli.js"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "test": "jest",
+    "lint": "eslint . --ext .ts",
+    "format": "prettier --write .",
+    "start": "node dist/cachaca-cli.js",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm run build && npm test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@actions/cache": "^4.1.0",
+    "@actions/github": "^6.0.1",
+    "axios": "^1.12.2",
+    "commander": "^14.0.1"
+  },
+  "devDependencies": {
+    "@types/commander": "^2.12.5",
+    "esbuild": "0.25.10",
+    "typescript": "^5.9.2"
+  }
+}
