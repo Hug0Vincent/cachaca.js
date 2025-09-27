@@ -4,6 +4,7 @@ export async function buildArchive(
     archivePath: string,
     sourcePath: string,
     leadingPath?: string,
+    newName?: string,
     list?: boolean
 ) {
   try {
@@ -12,7 +13,7 @@ export async function buildArchive(
         await listArchive(archivePath);
     } else {
         console.log(`📦 building archive: ${archivePath}`);
-        await updateArchiveWithFile(archivePath, sourcePath, leadingPath);
+        await updateArchiveWithFile(archivePath, sourcePath, leadingPath, newName);
         console.log(`✅ Archive updated.`);
         await listArchive(archivePath);
     }

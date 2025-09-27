@@ -20,19 +20,21 @@ const execAsync = promisify(exec);
 export async function updateArchiveWithFile(
     archivePath: string,
     sourcePath: string,
-    leadingPath?: string
+    leadingPath: string,
+    targetFileName?: string
 ): Promise<void> {
     if (!fs.existsSync(sourcePath)) {
         throw new Error(`Source path does not exist: ${sourcePath}`);
     }
 
     const baseName = path.basename(sourcePath);
-    const tempTar = `${archivePath}.untarred`;
+    const archiveFileName = targetFileName || baseName;
 
-    // Build tar transform option if leadingPath is provided
-    const transformFlag = leadingPath
-        ? `--transform='s|^${sourcePath}|${path.posix.join(leadingPath, baseName)}|'`
-        : '';
+    // POSIX-style path for use in tar transform
+    const archiveRelativePath = path.posix.join(leadingPath, archiveFileName);
+    const transformFlag = `--transform="s|^${sourcePath}$|${archiveRelativePath}|"`;
+
+    const tempTar = `${archivePath}.untarred`
 
     if (!fs.existsSync(archivePath)) {
         // Create new archive
