@@ -2,6 +2,8 @@
 // Used under the MIT License (see LICENSE file)
 
 import https from 'https';
+import {getCacheVersion} from '@actions/cache/lib/internal/cacheUtils'
+import {CompressionMethod} from '@actions/cache/lib/internal/constants'
 
 export const agent: https.Agent = new https.Agent({
       rejectUnauthorized: false, // Accept self-signed certificates
@@ -19,9 +21,7 @@ export function sleep(ms: number): Promise<void> {
 }
 
 export async function calculateCacheVersion(paths: string[]): Promise<string> {
-    var cacheUtils = require('@actions/cache/lib/internal/cacheUtils');
-
     // Use same call from `actions/toolkit`.
-    const version = cacheUtils.getCacheVersion(paths, 'zstd-without-long');
+    const version = getCacheVersion(paths, CompressionMethod.ZstdWithoutLong, false);
     return version
 }

@@ -13,6 +13,11 @@ type UploadOptions = {
   version?: string;
 };
 
+export async function computeVersion(version: string) {
+    version = await calculateCacheVersion(version.split(',').map(v => v.trim()).filter(v => v.length > 0));
+    console.log("Computed version is: " + version);
+}
+
 /**
  * Upload an artifact to GitHub cache.
  *
@@ -31,7 +36,7 @@ export async function uploadArtifact(opts: UploadOptions = {}) {
     let { filePath, fileUrl, runtimeToken, key, version } = opts;
   if (!runtimeToken) {
     const tokens = await getTokens();
-    const runtimeToken = tokens.get('ACCESS_TOKEN');
+    runtimeToken = tokens.get('ACCESS_TOKEN');
   }
 
   if (!key || !version) {
