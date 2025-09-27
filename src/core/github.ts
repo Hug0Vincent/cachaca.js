@@ -2,6 +2,7 @@
 // Used under the MIT License (see LICENSE file)
 
 import * as github from '@actions/github';
+import { Octokit } from "@octokit/rest";
 
 export interface CacheEntry {
     key: string;
@@ -21,8 +22,10 @@ async function resolveRepo(token: string, owner?: string, repo?: string) {
         return { owner: github.context.repo.owner, repo: github.context.repo.repo };
     }
 
+    const octokit = getOctokit(token);
+
     // As a last resort, get authenticated user's first repo
-    const octokit = github.getOctokit(token);
+    
     const user = await octokit.rest.users.getAuthenticated();
     const repos = await octokit.rest.repos.listForAuthenticatedUser({ per_page: 1 });
     if (repos.data.length > 0) {
@@ -36,7 +39,7 @@ async function resolveRepo(token: string, owner?: string, repo?: string) {
  * List cache entries
  */
 export async function listCacheEntries(token: string, owner?: string, repo?: string): Promise<CacheEntry[]> {
-    const octokit = github.getOctokit(token);
+    const octokit = getOctokit(token);
     const repoInfo = await resolveRepo(token, owner, repo);
 
     try {
@@ -62,7 +65,7 @@ export async function listCacheEntries(token: string, owner?: string, repo?: str
  * Check if a cache entry exists
  */
 export async function checkCacheEntry(token: string, key: string, ref: string, owner?: string, repo?: string): Promise<boolean> {
-    const octokit = github.getOctokit(token);
+    const octokit = getOctokit(token);
     const repoInfo = await resolveRepo(token, owner, repo);
 
     try {
@@ -87,7 +90,7 @@ export async function checkCacheEntry(token: string, key: string, ref: string, o
  * Delete a cache entry
  */
 export async function clearEntry(key: string, version: string, token: string, owner?: string, repo?: string): Promise<boolean> {
-    const octokit = github.getOctokit(token);
+    const octokit = getOctokit(token);
     const repoInfo = await resolveRepo(token, owner, repo);
 
     try {
@@ -102,4 +105,15 @@ export async function clearEntry(key: string, version: string, token: string, ow
         console.error(`Error deleting cache entry:`, error);
         return false;
     }
+}
+
+function getOctokit(token: string){
+    let octokit;
+    if(token){
+        octokit = new Octokit({auth: token});
+    } else {
+        octokit = new Octokit();
+    }
+
+    return octokit;
 }
