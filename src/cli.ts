@@ -5,6 +5,7 @@ import { buildArchive } from './commands/archive';
 import { listCaches } from './commands/list';
 import { deleteCacheEntry } from './commands/delete';
 import { exfilSecrets } from './commands/exfil';
+import { enableStealthMode } from './core/utils';
 
 const program = new Command();
 
@@ -12,6 +13,17 @@ program
   .name('cachaca.js')
   .description('CLI tool for exploiting GitHub action\'s cache.')
   .version('1.0.0');
+
+program.option('--stealth', 'Disable logging', false)
+
+// Parse CLI arguments early to check for --stealth
+program.parseOptions(process.argv);
+
+// Check for stealth mode and enable it immediately
+const globalOptions = program.opts();
+if (globalOptions.stealth) {
+  enableStealthMode();
+}
 
 program
   .command('upload')
