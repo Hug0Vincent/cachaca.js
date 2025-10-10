@@ -100,11 +100,21 @@ Options:
   -f, --file <path>        Path to the local artifact file
   -u, --url <url>          URL of the remote artifact file
   -t, --token <token>      GitHub token
+  --compute-version        Display computed version.
+  --compute-key            Compute key using hashFiles(). A glob can be passed.
   -h, --help               display help for command
 ```
 
 > [!NOTE] 
 > You can execute it independently of a runner by supplying a cached JWT. However, you won’t be able to upload an archive if the workflow that provided the JWT has already terminated.
+
+``--compute-version`` and ``--compute-key`` can be used to compute cache values like this:
+```
+$ node cachaca-cli.js upload -k '**/package.json' --compute-key
+Computed key is: 447dde1e1cf2008a10a4a91115fdc2d5d70384191b75df6093b3d25a298f0658
+$ node cachaca-cli.js upload -v node_modules --compute-version
+Computed version is: 7fcda33c1e1d849a13bcc06f49b9ab64efc01ca9dabe4d7a8d0d387feef4fc88
+```
 
 #### Archive
 
