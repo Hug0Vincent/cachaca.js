@@ -6,7 +6,7 @@
 </h1>
 
 <p align="center">
-   Some JS file to exploit GitHub action cache poisoning.
+   Some JS files to exploit GitHub action cache poisoning.
 </p>
 
 <div align="center">
