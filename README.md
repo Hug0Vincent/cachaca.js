@@ -65,6 +65,7 @@ CLI tool for exploiting GitHub action's cache.
 
 Options:
   -V, --version      output the version number
+  --stealth          Disable logging (default: false)
   -h, --help         display help for command
 
 Commands:
