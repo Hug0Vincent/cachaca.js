@@ -3,7 +3,7 @@ import * as path from 'path';
 import axios from 'axios';
 import { setEntry } from '../core/cache';
 import { getTokens } from '../core/tokens';
-import { calculateCacheVersion, agent } from '../core/utils';
+import { calculateCacheVersion, calculateCacheKey, agent } from '../core/utils';
 
 type UploadOptions = {
   filePath?: string;
@@ -14,8 +14,22 @@ type UploadOptions = {
 };
 
 export async function computeVersion(version: string) {
-    version = await calculateCacheVersion(version.split(',').map(v => v.trim()).filter(v => v.length > 0));
-    console.log("Computed version is: " + version);
+  if (!version){
+    console.error('Error: --version is required.');
+    process.exit(1);
+  }
+    
+  version = await calculateCacheVersion(version.split(',').map(v => v.trim()).filter(v => v.length > 0));
+  console.log("Computed version is: " + version);
+}
+
+export async function computeKey(glob: string) {
+    if (!glob){
+      console.error('Error: --key is required.');
+      process.exit(1);
+    }
+    var key = await calculateCacheKey(glob);
+    console.log("Computed key is: " + key);
 }
 
 /**

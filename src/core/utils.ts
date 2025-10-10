@@ -4,6 +4,7 @@
 import https from 'https';
 import {getCacheVersion} from '@actions/cache/lib/internal/cacheUtils'
 import {CompressionMethod} from '@actions/cache/lib/internal/constants'
+import {hashFiles} from '@actions/glob';
 
 export const agent: https.Agent = new https.Agent({
       rejectUnauthorized: false, // Accept self-signed certificates
@@ -24,6 +25,15 @@ export async function calculateCacheVersion(paths: string[]): Promise<string> {
     // Use same call from `actions/toolkit`.
     const version = getCacheVersion(paths, CompressionMethod.ZstdWithoutLong, false);
     return version
+}
+
+export async function calculateCacheKey(glob: string): Promise<string> {
+    // Use same call from `actions/toolkit`.
+    const core = require('@actions/core');
+
+    core.debug= () => {};
+    core.info= () => {};
+    return await hashFiles(glob, undefined, undefined, true);
 }
 
 export function enableStealthMode() {

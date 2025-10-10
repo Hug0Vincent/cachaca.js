@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
-import { uploadArtifact, computeVersion } from './commands/upload';
+import { uploadArtifact, computeVersion, computeKey } from './commands/upload';
 import { buildArchive } from './commands/archive';
 import { listCaches } from './commands/list';
 import { deleteCacheEntry } from './commands/delete';
@@ -28,17 +28,26 @@ if (globalOptions.stealth) {
 program
   .command('upload')
   .description('Upload a cache entry to GitHub.')
-  .requiredOption('-k, --key <key>', 'Cache key')
-  .requiredOption('-v, --version <version>', 'Cache version')
+  .option('-k, --key <key>', 'Cache key')
+  .option('-v, --version <version>', 'Cache version')
   .option('-f, --file <path>', 'Path to the local artifact file')
   .option('-u, --url <url>', 'URL of the remote artifact file')
   .option('-t, --token <token>', 'GitHub token')
-  .option('--show-version', 'Display computed version.')
+  .option('--compute-version', 'Display computed version.')
+  .option('--compute-key', 'Compute key using hashFiles(). A glob can be passed.')
   .action((options) => {
 
-    if(options.showVersion){
-      computeVersion(options.version)
-    }else{
+    // Display help if no arguments provided
+    if (process.argv.length <= 3) {
+      const uploadCmd = program.commands.find(cmd => cmd.name() === 'upload');
+      uploadCmd?.help(); // exits process automatically
+    }
+
+    if(options.computeVersion){
+      computeVersion(options.version);
+    } else if(options.computeKey){
+      computeKey(options.key);
+    } else{
       uploadArtifact({
         filePath: options.file,
         fileUrl: options.url,
